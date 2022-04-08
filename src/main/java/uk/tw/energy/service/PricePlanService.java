@@ -62,4 +62,20 @@ public class PricePlanService {
         return BigDecimal.valueOf(Duration.between(first.getTime(), last.getTime()).getSeconds() / 3600.0);
     }
 
+    public Optional<PricePlan> getPricePlan(String planName){
+        PricePlan pricePlan=null;
+        for(PricePlan pp: pricePlans){
+            if(pp.getPlanName().equals(planName))
+                pricePlan =pp;
+        }
+        return  Optional.ofNullable(pricePlan);
+
+    }
+    public Optional<BigDecimal> getCostForLastSevenDays(String  smartMeterId, String planName) {
+        Optional<List<ElectricityReading>> readings = meterReadingService.getLastSevenDaysReadings(smartMeterId);
+        Optional<PricePlan> pricePlan=getPricePlan(planName);
+        if(readings.isPresent() && pricePlan.isPresent())
+            return Optional.ofNullable(calculateCost(readings.get(),pricePlan.get()));
+        return Optional.empty();
+    }
 }

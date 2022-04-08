@@ -48,4 +48,6 @@ public class MeterReadingController {
                 ? ResponseEntity.ok(readings.get())
                 : ResponseEntity.notFound().build();
     }
+
+
 }
